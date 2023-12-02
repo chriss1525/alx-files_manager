@@ -5,42 +5,36 @@ import { MongoClient } from 'mongodb';
 class DBClient {
   // constructor
   constructor() {
-    // connection url
-    this.host = process.env.DB_HOST || 'localhost';
-    this.port = process.env.DB_PORT || 27017;
-    this.database = process.env.DB_DATABASE || 'files_manager';
-    this.url = `mongodb://${this.host}:${this.port}`;
+    // class variables
+    this.db = null;
+    const host = process.env.DB_HOST || 'localhost';
+    const port = process.env.DB_PORT || 27017;
+    const database = process.env.DB_DATABASE || 'files_manager';
+
+    // connect to db
+    const url = `mongodb://${host}:${port}/`;
+    MongoClient.connect(url, { useUnifiedTopology: true }, (err, db) => {
+      if (err) console.log(err);
+      this.db = db.db(database);
+      this.db.createCollection('users');
+      this.db.createCollection('files');
+    });
   }
 
   // class functions
   isAlive() {
-    if (this.client.isConnected()) {
-      return true;
-    }
-    return false;
+    return !!this.db;
   }
 
   async nbUsers() {
-    try {
-      const users = await this.client.db(this.database).collection('users').countDocuments();
-      return users;
-    } catch (error) {
-      console.error('Error in nbUsers:', error.message);
-      throw error;
-    }
+    return this.db.collection('users').countDocuments();
   }
 
   async nbFiles() {
-    try {
-      const files = await this.client.db(this.database).collection('files').countDocuments();
-      return files;
-    } catch (error) {
-      console.error('Error in nbFiles:', error.message);
-      throw error;
-    }
+    return this.db.collection('files').countDocuments();
   }
 }
 
-  const dbClient = new DBClient();
-  dbClient.client = new MongoClient(dbClient.url, { useUnifiedTopology: true });
-  export default dbClient;
+const dbClient = new DBClient();
+dbClient.client = new MongoClient(dbClient.url, { useUnifiedTopology: true });
+export default dbClient;
