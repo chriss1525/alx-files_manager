@@ -21,16 +21,26 @@ class DBClient {
   }
 
   async nbUsers() {
-    const users = await this.client.db(this.database).collection('users').countDocuments();
-    return users;
+    try {
+      const users = await this.client.db(this.database).collection('users').countDocuments();
+      return users;
+    } catch (error) {
+      console.error('Error in nbUsers:', error.message);
+      throw error;
+    }
   }
 
   async nbFiles() {
-    const files = await this.client.db(this.database).collection('files').countDocuments();
-    return files;
+    try {
+      const files = await this.client.db(this.database).collection('files').countDocuments();
+      return files;
+    } catch (error) {
+      console.error('Error in nbFiles:', error.message);
+      throw error;
+    }
   }
 }
 
-const dbClient = new DBClient();
-dbClient.client = new MongoClient(dbClient.url, { useUnifiedTopology: true });
-export default dbClient;
+  const dbClient = new DBClient();
+  dbClient.client = new MongoClient(dbClient.url, { useUnifiedTopology: true });
+  export default dbClient;
