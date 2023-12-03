@@ -5,6 +5,8 @@ const express = require('express');
 const app = express();
 const dbClient = require('./utils/db.js');
 const port = process.env.PORT || 5000;
+// import body parser
+app.use(express.json());
 
 // import routes
 const routes = require('./routes');

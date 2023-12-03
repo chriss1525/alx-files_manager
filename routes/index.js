@@ -6,6 +6,7 @@ const router = express.Router();
 
 // import controller
 const AppController = require('../controllers/AppController');
+const UsersController = require('../controllers/UsersController');
 
 // define endpoints
 router
@@ -15,6 +16,11 @@ router
 router
   .route('/stats')
   .get(AppController.getStats)
+
+router
+  .route('/users')
+  .post(UsersController.postNew)
+
 
 module.exports = router;
 
