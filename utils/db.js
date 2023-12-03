@@ -13,11 +13,17 @@ class DBClient {
 
     // connect to db
     const url = `mongodb://${host}:${port}/`;
-    MongoClient.connect(url, { useUnifiedTopology: true }, (err, db) => {
-      if (err) console.log(err);
-      this.db = db.db(database);
-      this.db.createCollection('users');
-      this.db.createCollection('files');
+    MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
+      if (err) {
+        console.error('Error connecting to MongoDB:', err);
+        return;
+      }
+
+      this.db = client.db(database);
+
+      // Check if collections exist, and create them if not
+      this.createCollectionIfNotExists('users');
+      this.createCollectionIfNotExists('files');
     });
   }
 
@@ -33,8 +39,15 @@ class DBClient {
   async nbFiles() {
     return this.db.collection('files').countDocuments();
   }
+
+  // Helper function to create a collection if it doesn't exist
+  async createCollectionIfNotExists(collectionName) {
+    const collections = await this.db.listCollections({ name: collectionName }).toArray();
+    if (collections.length === 0) {
+      await this.db.createCollection(collectionName);
+    }
+  }
 }
 
 const dbClient = new DBClient();
-dbClient.client = new MongoClient(dbClient.url, { useUnifiedTopology: true });
 export default dbClient;
