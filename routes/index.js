@@ -1,7 +1,7 @@
 // create API endpoints
 
 // import express
-let express = require('express');
+const express = require('express');
 const router = express.Router();
 
 // import controller
@@ -11,16 +11,14 @@ const UsersController = require('../controllers/UsersController');
 // define endpoints
 router
   .route('/status')
-  .get(AppController.getStatus)
+  .get(AppController.getStatus);
 
 router
   .route('/stats')
-  .get(AppController.getStats)
+  .get(AppController.getStats);
 
 router
   .route('/users')
-  .post(UsersController.postNew)
-
+  .post(UsersController.postNew);
 
 module.exports = router;
-
