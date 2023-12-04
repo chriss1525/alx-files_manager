@@ -32,10 +32,7 @@ const AppController = {
         error: err.message,
       });
     }
-  }
+  },
 };
 
 module.exports = AppController;
-
-
-
