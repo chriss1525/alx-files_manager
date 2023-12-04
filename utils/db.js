@@ -40,6 +40,13 @@ class DBClient {
     return this.db.collection('files').countDocuments();
   }
 
+  async findUser(user) {
+    return this.db.collection('users').findOne(user);
+  }
+
+  async createUser(user) {
+    return this.db.collection('users').insertOne(user);
+  }
   // Helper function to create a collection if it doesn't exist
   async createCollectionIfNotExists(collectionName) {
     const collections = await this.db.listCollections({ name: collectionName }).toArray();
