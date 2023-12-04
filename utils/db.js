@@ -47,7 +47,6 @@ class DBClient {
   async createUser(user) {
     return this.db.collection('users').insertOne(user);
   }
-
   // Helper function to create a collection if it doesn't exist
   async createCollectionIfNotExists(collectionName) {
     const collections = await this.db.listCollections({ name: collectionName }).toArray();

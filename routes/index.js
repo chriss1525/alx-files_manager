@@ -18,8 +18,8 @@ router
   .route('/stats')
   .get(AppController.getStats);
 
+
 router
   .route('/users')
   .post(UsersController.postNew);
-
 module.exports = router;
