@@ -4,7 +4,7 @@ import { MongoClient } from 'mongodb';
 
 class DBClient {
   // constructor
-  constructor () {
+  constructor() {
     // class variables
     this.db = null;
     const host = process.env.DB_HOST || 'localhost';
@@ -28,28 +28,28 @@ class DBClient {
   }
 
   // class functions
-  isAlive () {
+  isAlive() {
     return !!this.db;
   }
 
-  async nbUsers () {
+  async nbUsers() {
     return this.db.collection('users').countDocuments();
   }
 
-  async nbFiles () {
+  async nbFiles() {
     return this.db.collection('files').countDocuments();
   }
 
-  async findUser (user) {
+  async findUser(user) {
     return this.db.collection('users').findOne(user);
   }
 
-  async createUser (user) {
+  async createUser(user) {
     return this.db.collection('users').insertOne(user);
   }
 
   // Helper function to create a collection if it doesn't exist
-  async createCollectionIfNotExists (collectionName) {
+  async createCollectionIfNotExists(collectionName) {
     const collections = await this.db.listCollections({ name: collectionName }).toArray();
     if (collections.length === 0) {
       await this.db.createCollection(collectionName);

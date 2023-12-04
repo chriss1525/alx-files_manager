@@ -7,11 +7,11 @@ const AppController = {
       const dbStatus = await dbClient.isAlive();
 
       res.status(200).json({
-        db: dbStatus
+        db: dbStatus,
       });
     } catch (err) {
       res.status(500).json({
-        error: err.message
+        error: err.message,
       });
     }
   },
@@ -23,14 +23,14 @@ const AppController = {
 
       res.status(200).json({
         users,
-        files
+        files,
       });
     } catch (err) {
       res.status(500).json({
-        error: err.message
+        error: err.message,
       });
     }
-  }
+  },
 };
 
 module.exports = AppController;
