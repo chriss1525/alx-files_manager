@@ -4,10 +4,12 @@ import dbClient from '../utils/db';
 const AppController = {
   getStatus: async (req, res) => {
     try {
+      const redisStatus = await dbClient.isAlive();
       const dbStatus = await dbClient.isAlive();
 
       res.status(200).json({
         db: dbStatus,
+        redis: redisStatus,
       });
     } catch (err) {
       res.status(500).json({
