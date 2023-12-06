@@ -23,6 +23,19 @@ const UsersController = {
       return res.status(500).send({ error: error.message });
     }
   },
+
+  getMe: async (req, res) => {
+    try {
+      const { userId } = req;
+      const user = await dbClient.findUser({ id: userId });
+      if (!user) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
+      return res.status(200).send({ id: user.id, email: user.email });
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
 };
 
 module.exports = UsersController;
