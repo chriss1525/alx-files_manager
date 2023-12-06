@@ -27,4 +27,13 @@ router
   .route('/files')
   .post(FilesController.postUpload)
 
+router
+  .route('/files/:id')
+  .get(FilesController.getShow)
+
+router
+  .route('/files')
+  .get(FilesController.getIndex)
+
+
 module.exports = router;

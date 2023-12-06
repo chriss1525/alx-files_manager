@@ -40,6 +40,66 @@ const FilesController = {
       return res.status(500).send({ error: error.message });
     }
   },
+
+  getShow: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { userId } = req;
+
+      // Find the file document
+      const file = await dbClient.files.findOne({ _id: id });
+
+      if (!file) {
+        return res.status(404).send({ error: 'File not found' });
+      }
+
+      if (file.isPublic !== true && file.userId !== userId) {
+        return res.status(404).send({ error: 'File not found' });
+      }
+
+      const storage = process.env.FOLDER_PATH || '/tmp/files_manager';
+      const filePath = `${storage}/${file._id}`;
+
+      // Read the file data from disk
+      const fileData = await fs.readFile(filePath);
+
+      // Convert the file data to a base64 string
+      const fileData64 = fileData.toString('base64');
+
+      // Create the response
+      const response = {
+        ...file,
+        data: fileData64,
+      };
+
+      return res.status(200).send(response);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: error.message });
+    }
+  },
+
+  getIndex: async (req, res) => {
+    try {
+      const { parentId } = req.query;
+      const { userId } = req;
+
+      // Find the file documents
+      const query = parentId ? { parentId } : { userId };
+      const files = await dbClient.files.find(query).toArray();
+
+      // Create the response
+      const response = files.map((file) => {
+        const { _id, name, type, isPublic } = file;
+        return { id: _id, name, type, isPublic };
+      });
+
+      return res.status(200).send(response);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ error: error.message });
+    }
+  },
 };
 
 module.exports = FilesController;
