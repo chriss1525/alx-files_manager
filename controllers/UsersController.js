@@ -18,11 +18,18 @@ const UsersController = {
       }
       const securePassword = sha1(password);
       const newUser = await dbClient.createUser({ email, password: securePassword });
-      return res.status(201).send(newUser);
+
+      // Modify the structure of newUser before sending in the response
+      const formattedUser = {
+        id: newUser.insertedId,
+        email: newUser.ops[0].email
+      };
+
+      return res.status(201).send(formattedUser);
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }
-  },
+  }
 };
 
 module.exports = UsersController;
